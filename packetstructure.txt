@@ -1,0 +1,36 @@
+File header: 24 bytes
+    32 btis: Magic number
+    16, 16  : Major version, Minor version
+    32 bits: timezone
+    32 bits: timestamps
+    32 bits: Snaplen
+    4(1), 28   : FCS(with F), Linktype
+
+Packet header: 16 bytes
+    32 bits: struct timeval sec
+    32 bits: struct timeval usec
+    32 bits: caplen
+    32 bits: len
+
+Ethernet header: 14 bytes
+    6 bytes: Destination Mac address
+    6 bytes: Source Mac address
+    2 bytes: IP version type
+
+///////////////////////////////////////////////////////
+
+IPv4 header: 20 ~ 60 bytes 
+    4,4,8,16    : VER, HLEN, DS, Total Length
+    16, 3, 13   : Identification, Flags(x,D,M), Fragmentaion offset
+    8, 8, 16    : TTL, Protocol, Header checksum
+    32 bits     : Source IP address
+    32 bits     : Destination IP address
+
+IPv6 header: 20 ~ 60 bytes 
+    4, 8, 20    : Version, Traffic class, Flow label
+    16, 8, 8    : Payload length, Next header, Hop limit
+    128 bits    : Source IP address
+    128 bits    : Destination IP address
+
+
+//////////////////////////////////////////////////////
