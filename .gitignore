@@ -1,4 +1,4 @@
 
 
 # no data file
-*.datafiles
+datafiles/
