@@ -1,11 +1,8 @@
 //2nd layer: Ethernet
-#include <stdio.h>
-#include <stdint.h>
 #include "datalink_layer.h"
 
 
-uint8_t* parse_Datalink(FILE* fp, uint8_t phy_type){
-    uint8_t network_type[2];
+void parse_Datalink(FILE* fp, uint8_t datalink_type, uint8_t network_type[]){
 
     switch (1)
     {
@@ -16,14 +13,11 @@ uint8_t* parse_Datalink(FILE* fp, uint8_t phy_type){
     default:
         break;
     }
-
-    return network_type;
 }
 
 void parse_ethernet(FILE* fp){
     ethrnt_hdr eheader;
     fread(&eheader, sizeof(eheader), 1, fp);
+    
 
-    
-    
 }

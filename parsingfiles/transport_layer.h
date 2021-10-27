@@ -1,5 +1,5 @@
 //4th layer: TCP, UDP, SCTP
-#include <stdint.h>
+#include "bytecheck.h"
 
 typedef struct TCP_header // 20 + @ bytes
 {
@@ -18,6 +18,6 @@ typedef struct UDP_header // 8 bytes
 }udp_hdr;
 
 
-uint8_t parse_Transport(FILE* fp, uint8_t protocolID);
+void parse_Transport(FILE* fp, uint8_t protocolID, uint8_t* app_type);
 void parse_TCP(FILE* fp);
 void parse_UDP(FILE* fp);

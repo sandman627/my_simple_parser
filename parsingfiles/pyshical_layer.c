@@ -1,27 +1,23 @@
 //1st layer: pyshical address
-#include <stdio.h>
-#include <stdint.h>
 #include "pyshical_layer.h"
 
 
-uint8_t parse_Pyshical(FILE* fp){
-    uint8_t datalink_type = 0;
+void parse_Pyshical(FILE* fp, uint32_t* caplen, uint8_t* datalink_type){
+    datalink_type = 0;
 
-    parse_Wireshark(fp);
+    *caplen = parse_Wireshark(fp);
 
-    return datalink_type;
 }
 
-void parse_Wireshark(FILE* fp){
-    FILE* startpoint = fp;
+uint32_t parse_Wireshark(FILE* fp){
     f_hdr fheader;
     pkt_hdr pheader;
     
     fread(&fheader, sizeof(fheader), 1, fp);
     fread(&pheader, sizeof(pheader), 1, fp);
 
+    return framelength(pheader);
 }
-
 
 void parse_PHYIEEE(FILE* fp){
 

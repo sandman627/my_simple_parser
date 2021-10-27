@@ -1,11 +1,8 @@
 //4th layer: TCP, UDP, SCTP
-#include <stdio.h>
-#include <stdint.h>
 #include "transport_layer.h"
 
 
-uint8_t parse_Transport(FILE* fp, uint8_t protocolID){
-
+void parse_Transport(FILE* fp, uint8_t protocolID, uint8_t* app_type){
 
     switch (protocolID)
     {

@@ -1,5 +1,5 @@
 //3rd layer: IP, ICMP, IGMP
-#include <stdint.h>
+#include "bytecheck.h"
 
 typedef struct IPv4_header // 20 + @ bytes
 {
@@ -19,7 +19,8 @@ typedef struct IPv6_header // 40 bytes
     uint8_t dstAdd[16]; // 6 ~9
 }IPv6_hdr;
 
-uint8_t parse_Network(FILE* fp, uint8_t ethertype[2]);
+
+void parse_Network(FILE* fp, uint8_t network_type[], uint8_t* transport_type);
 void parse_IPv4(FILE* fp);
 void parse_IPv6(FILE* fp);
 void parse_ARP(FILE* fp);

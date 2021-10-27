@@ -1,5 +1,5 @@
 //1st layer: pyshical address
-#include <stdint.h>
+#include "bytecheck.h"
 
 typedef struct file_header // 24 bytes
 {
@@ -20,7 +20,7 @@ typedef struct packet_header // 16 bytes
 }pkt_hdr;
 
 
-uint8_t parse_Pyshical(FILE* fp);
-void parse_Wireshark(FILE* fp);
+void parse_Pyshical(FILE* fp, uint32_t* caplen, uint8_t* datalink_type);
+uint32_t parse_Wireshark(FILE* fp);
 void parse_PHYIEEE(FILE* fp);
 uint32_t framelength(pkt_hdr chunck);

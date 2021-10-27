@@ -1,15 +1,11 @@
 //3rd layer: IP, ICMP, IGMP
-#include <stdio.h>
-#include <stdint.h>
 #include "network_layer.h"
 
 
-uint8_t parse_Network(FILE* fp, uint8_t ethertype[2]){
-    uint8_t transport_type;
-    
-    uint16_t type = ethertype[0];
+void parse_Network(FILE* fp, uint8_t network_type[], uint8_t* transport_type){
+    uint16_t type = network_type[0];
     type <<= 8;
-    type += ethertype[1];
+    type += network_type[1];
 
     switch (type)
     {
@@ -29,9 +25,7 @@ uint8_t parse_Network(FILE* fp, uint8_t ethertype[2]){
     fprint("Ethernet type error. No match found!\n");
     exit(1);
         break;
-    }
-
-    return transport_type;    
+    }  
 }
 
 void parse_IPv4(FILE* fp){

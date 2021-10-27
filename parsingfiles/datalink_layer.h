@@ -1,5 +1,5 @@
 //2nd layer: Ethernet
-#include <stdint.h>
+#include "bytecheck.h"
 
 typedef struct Ethernet_header // 14 bytes
 {
@@ -9,5 +9,5 @@ typedef struct Ethernet_header // 14 bytes
 }ethrnt_hdr;
 
 
-uint8_t* parse_Datalink(FILE* fp, uint8_t phy_type);
+void parse_Datalink(FILE* fp, uint8_t datalink_type, uint8_t network_type[]);
 void parse_ethernet(FILE* fp);
