@@ -22,7 +22,7 @@ void parse_Network(FILE* fp, uint8_t network_type[], uint8_t* transport_type){
         break;
 
     default:
-    fprint("Ethernet type error. No match found!\n");
+    printf("Ethernet type error. No match found!\n");
     exit(1);
         break;
     }  

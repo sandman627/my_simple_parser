@@ -1,7 +1,6 @@
 #ifndef BYTECHECK
 #define BYTECHECK
 
-
 #include <stdio.h>
 #include <stdint.h>
 

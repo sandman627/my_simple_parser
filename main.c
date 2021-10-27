@@ -7,7 +7,20 @@
 #include "parsingfiles/transport_layer.h"
 
 
+typedef struct file_header // 24 bytes
+{
+    uint8_t magic[4];
+    uint8_t major[2], minor[2];
+    uint8_t timezone[4];
+    uint8_t timestamp[4];
+    uint8_t snaplen[4];
+    uint8_t FCS_and_linktype[4];
+}f_hdr;
+
+
+void parse_Wireshark(FILE* fp);
 void Parsing(FILE* fp);
+
 
 int main()
 {
@@ -22,10 +35,13 @@ int main()
     printf("Enter the number of packets to read: ");
     scanf("%d", &packet_num);
 
+    parse_Wireshark(fp);
+
     int i = 0;
     while (fp != NULL && packet_num != i){
             i++;
-            // parsing code
+            printf("frame number: %d\n", i);
+            Parsing(fp);
     }
     
     fclose(fp);
@@ -33,6 +49,10 @@ int main()
 	return 0;
 }
 
+void parse_Wireshark(FILE* fp){
+    f_hdr fheader;
+    fread(&fheader, sizeof(fheader), 1, fp);
+}
 
 void Parsing(FILE* fp){
     FILE* checkpoint = fp;
@@ -48,7 +68,8 @@ void Parsing(FILE* fp){
     //parse_Network(fp, network_type, &transport_type);
     //parse_Transport(fp, transport_type, &app_type);
 
-    fseek(checkpoint, caplen + 40, 1);
     printf("caplen: %d\n", caplen);
+    
+    fseek(checkpoint, caplen, 1);
     fp = checkpoint; // after reading all the wanted data, change pointer to next packet
 }
