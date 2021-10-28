@@ -1,26 +1,13 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include <stdlib.h>
 #include <time.h>
 #include "parsingfiles/pyshical_layer.h"
 #include "parsingfiles/datalink_layer.h"
 #include "parsingfiles/network_layer.h"
 #include "parsingfiles/transport_layer.h"
 
+//gcc main.c parsingfiles/bytecheck.c parsingfiles/pyshical_layer.c parsingfiles/datalink_layer.c parsingfiles/network_layer.c parsingfiles/transport_layer.c -o test
 
-typedef struct file_header // 24 bytes
-{
-    uint8_t magic[4];
-    uint8_t major[2], minor[2];
-    uint8_t timezone[4];
-    uint8_t timestamp[4];
-    uint8_t snaplen[4];
-    uint8_t FCS_and_linktype[4];
-}f_hdr;
-
-
-void parse_Wireshark(FILE* fp);
 void Parsing(FILE* fp);
-
 
 int main()
 {
@@ -49,10 +36,6 @@ int main()
 	return 0;
 }
 
-void parse_Wireshark(FILE* fp){
-    f_hdr fheader;
-    fread(&fheader, sizeof(fheader), 1, fp);
-}
 
 void Parsing(FILE* fp){
     FILE* checkpoint = fp;

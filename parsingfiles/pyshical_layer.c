@@ -2,6 +2,12 @@
 #include "pyshical_layer.h"
 
 
+void parse_Wireshark(FILE* fp){
+    f_hdr fheader;
+    fread(&fheader, sizeof(fheader), 1, fp);
+}
+
+
 void parse_Pyshical(FILE* fp, uint32_t* caplen, uint8_t* datalink_type){
     *datalink_type = 0;
     

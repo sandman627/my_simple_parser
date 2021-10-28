@@ -37,7 +37,7 @@ void parse_IPv6(FILE* fp){
     fread(&chunk, sizeof(chunk), 1, fp);
 
     int8_t headernum= chunk.nextheader;
-    switch(headernum){// do not use break since there maybe more than one extension header
+    switch((uint8_t)headernum){// do not use break since there maybe more than one extension header
         case 0: // hop by hop
         case 43: // routing header
         case 44: // fragment header
