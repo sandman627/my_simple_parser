@@ -2,25 +2,23 @@
 #include "datalink_layer.h"
 
 
-void parse_Datalink(FILE* fp, uint8_t datalink_type, uint8_t network_type[]){
+void parse_Datalink(FILE* fp, uint8_t datalink_type, uint8_t network_type[2]){
     ethrnt_hdr eheader;
     fread(&eheader, sizeof(eheader), 1, fp);
-    //fseek(fp, -14, 1);
-    //print_MacAddress(eheader);
+    print_ethernet(eheader);
 
+    network_type[0] = eheader.type[0];
+    network_type[1] = eheader.type[1];
 
     /*
-    uint16_t ethertype =eheader.type[0];
-    ethertype <<= 8;
-    ethertype += eheader.type[1];
+    uint16_t ethertype = twobytearray(eheader.type);
 
-
-    if(eheader.type[0] > 0x6)  // DIX 2.0
+    if(ethertype > 0x600)  // DIX 2.0
     {
         switch (1)
         {
         case 1:
-            parse_ethernet(fp);
+            //parse_ethernet(fp);
             break;
         
         default:
@@ -35,13 +33,14 @@ void parse_Datalink(FILE* fp, uint8_t datalink_type, uint8_t network_type[]){
 void parse_ethernet(FILE* fp){
     ethrnt_hdr eheader;
     fread(&eheader, sizeof(eheader), 1, fp);
+    print_ethernet(eheader);
 }
 
 
-void print_MacAddress(ethrnt_hdr eheader){
+void print_ethernet(ethrnt_hdr eheader){
     printf("Source Mac Address: ");
     for(int i = 0; i< 6; i++){
-        printf("%d",eheader.src_mac);
+        printf("%02x",eheader.src_mac[i]);
         if(i != 5)
             printf(":");
         else
@@ -50,7 +49,7 @@ void print_MacAddress(ethrnt_hdr eheader){
     
     printf("Destination Mac Address: ");
     for(int j = 0; j< 6; j++){
-        printf("%d",eheader.dst_mac);
+        printf("%02x",eheader.dst_mac[j]);
         if(j != 5)
             printf(":");
         else

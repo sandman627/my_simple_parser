@@ -9,6 +9,6 @@ typedef struct Ethernet_header // 14 bytes
 }ethrnt_hdr;
 
 
-void parse_Datalink(FILE* fp, uint8_t datalink_type, uint8_t network_type[]);
+void parse_Datalink(FILE* fp, uint8_t datalink_type, uint8_t network_type[2]);
 void parse_ethernet(FILE* fp);
-void print_MacAddress(ethrnt_hdr eheader);
+void print_ethernet(ethrnt_hdr eheader);

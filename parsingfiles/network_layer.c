@@ -3,14 +3,12 @@
 
 
 void parse_Network(FILE* fp, uint8_t network_type[], uint8_t* transport_type){
-    uint16_t type = network_type[0];
-    type <<= 8;
-    type += network_type[1];
-
+    uint16_t type = twobytearray(network_type);
+    printf("Ethernet type: 0x%04x\n", type);
     switch (type)
     {
     case 0x0800: // IPv4
-    parse_IPv4(fp);
+    parse_IPv4(fp, transport_type);
         break;
     
     case 0x86dd: // IPv6
@@ -22,14 +20,16 @@ void parse_Network(FILE* fp, uint8_t network_type[], uint8_t* transport_type){
         break;
 
     default:
-    printf("Ethernet type error. No match found!\n");
-    exit(1);
+    printf("Ethernet type error. No.0x%04x not found!\n", type);
         break;
     }  
 }
 
-void parse_IPv4(FILE* fp){
-
+void parse_IPv4(FILE* fp, uint8_t* transport_type){
+    IPv4_hdr chunk;
+    fread(&chunk, sizeof(chunk), 1, fp);
+    *transport_type = chunk.protocol;
+    print_IPv4(chunk);
 }
 
 void parse_IPv6(FILE* fp){
@@ -58,44 +58,37 @@ void parse_ARP(FILE* fp){
 
 }
 
-/*
-void print_hex_IPv4(IPv4_hdr chunk){
+
+void print_IPv4(IPv4_hdr chunk){
     printf("\nIPv4 HEADER\n");
-    printf("%02x", chunk.verhlen);
-    printf("%02x", chunk.DS);
-    printf("%04x\n", chunk.TotalLen);
+    printf("VER: %d\n", chunk.verhlen / 16);
+    printf("HLEN: %d\n", chunk.verhlen % 16);
 
-    printf("%04x", chunk.identification);
-    printf("%04x\n", chunk.flag_and_offset);
+    printf("Total length: %d\n", twobytearray(chunk.TotalLen));
+    printf("Identification: %04x\n", twobytearray(chunk.identification));
 
-    printf("%02x", chunk.TTL);
-    printf("%02x", chunk.protocol);
-    printf("%04x\n", chunk.checksum);
-    
-    printf("%08x\n", chunk.src_IP);
-    printf("%08x\n", chunk.dst_IP);
+    printf("Time to Live: %d\n", chunk.TTL);
+    printf("Protocol: %d\n", chunk.protocol);
+
+    printf("Source IP Address: ");
+    for(int i = 0; i< 4; i++){
+        printf("%d",chunk.src_IP[i]);
+        if(i != 3)
+            printf(".");
+        else
+            printf("\n");
+    }
+    printf("Destination IP Address: ");
+    for(int j = 0; j< 4; j++){
+        printf("%d",chunk.dst_IP[j]);
+        if(j != 3)
+            printf(".");
+        else
+            printf("\n");
+    }
 }
 
-void parse_IPv4(IPv4_hdr chunk){
-    printf("%02x", chunk.verhlen);
-    printf("%02x", chunk.DS);
-    printf("%04x\n", chunk.TotalLen);
-
-    printf("%04x", chunk.identification);
-    printf("%04x\n", chunk.flag_and_offset);
-
-    printf("%02x", chunk.TTL);
-    printf("%02x", chunk.protocol);
-    printf("%04x\n", chunk.checksum);
-    
-    printf("%08x\n", chunk.src_IP);
-    printf("%08x\n", chunk.dst_IP);
-}
-
-
-void print_hex_IPv6(IPv6_hdr chunk){
+void print_IPv6(IPv6_hdr chunk){
     printf("\nIPv6 HEADER\n");
 
 }
-
-*/

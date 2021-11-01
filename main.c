@@ -1,4 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include <string.h>
 #include <time.h>
 #include "parsingfiles/pyshical_layer.h"
 #include "parsingfiles/datalink_layer.h"
@@ -27,7 +28,7 @@ int main()
     int i = 0;
     while (fp != NULL && packet_num != i){
             i++;
-            printf("frame number: %d\n", i);
+            printf("\n\n    Frame number: %d\n", i);
             Parsing(fp);
     }
     
@@ -38,21 +39,18 @@ int main()
 
 
 void Parsing(FILE* fp){
-    FILE* checkpoint = fp;  // file pointer to save current packet start point
-
-    uint32_t caplen;
+    int cur_position = ftell(fp);  // save the start point of the frame 
+    uint32_t caplen;  // length of the frame
     uint8_t datalink_type; // just in case...
     uint8_t network_type[2]; // protocol number for datalink layer (2 bytes)
-    uint8_t transport_type; // protocol number for network layer
+    uint8_t transport_type = 0; // protocol number for network layer
     uint8_t app_type; // protocol number for 
     
     parse_Pyshical(fp, &caplen, &datalink_type); //not just next layer type, also return length of frame
-    //parse_Datalink(fp, datalink_type, network_type);
-    //parse_Network(fp, network_type, &transport_type);
-    //parse_Transport(fp, transport_type, &app_type);
+    parse_Datalink(fp, datalink_type, network_type);
+    parse_Network(fp, network_type, &transport_type);
+    parse_Transport(fp, transport_type, &app_type);
 
-    printf("caplen: %d\n", caplen);
-    
-    fseek(checkpoint, caplen, 1);
-    fp = checkpoint; // after reading all the wanted data, change pointer to next packet
+    fseek(fp, cur_position, SEEK_SET);
+    fseek(fp, caplen, 1);// after reading all the wanted data, change pointer to next packet
 }

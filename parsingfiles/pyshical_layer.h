@@ -1,6 +1,5 @@
 //1st layer: pyshical address
 #include "bytecheck.h"
-#include <time.h>
 
 
 typedef struct file_header // 24 bytes
@@ -28,6 +27,4 @@ void parse_Wireshark(FILE* fp);
 
 void parse_Pyshical(FILE* fp, uint32_t* caplen, uint8_t* datalink_type);
 void parse_IEEE802(FILE* fp, uint32_t* caplen);
-void parse_PHYIEEE(FILE* fp);
-uint32_t getframelength(pkt_hdr chunck);
 void print_time(pkt_hdr pheader);

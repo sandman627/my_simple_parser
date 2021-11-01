@@ -21,6 +21,9 @@ typedef struct IPv6_header // 40 bytes
 
 
 void parse_Network(FILE* fp, uint8_t network_type[], uint8_t* transport_type);
-void parse_IPv4(FILE* fp);
+void parse_IPv4(FILE* fp, uint8_t* transport_type);
 void parse_IPv6(FILE* fp);
 void parse_ARP(FILE* fp);
+
+void print_IPv4(IPv4_hdr chunk);
+void print_IPv6(IPv6_hdr chunk);
