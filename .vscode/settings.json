@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "datalink_layer.h": "c",
-        "time.h": "c"
+        "time.h": "c",
+        "pyshical_layer.h": "c"
     }
 }

@@ -38,7 +38,7 @@ int main()
 
 
 void Parsing(FILE* fp){
-    FILE* checkpoint = fp;
+    FILE* checkpoint = fp;  // file pointer to save current packet start point
 
     uint32_t caplen;
     uint8_t datalink_type; // just in case...
