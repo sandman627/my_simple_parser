@@ -8,7 +8,15 @@
 
 //gcc main.c parsingfiles/bytecheck.c parsingfiles/pyshical_layer.c parsingfiles/datalink_layer.c parsingfiles/network_layer.c parsingfiles/transport_layer.c -o test
 
+int caplength = 0;  // includes 16 bit pkt header but not file header (ethernet header + frame)
+int framesize = 0;  // layer 2 data, size without ethernet header (IP header + packet)
+int packetsize = 0;  // layer 3 data, size without IP header (TCP header + segment)
+int segmentsize = 0;  // layer 4 data, size without tcp or udp header (segment)
+int maxpayload = 0;
+
 void Parsing(FILE* fp);
+
+
 
 int main()
 {
@@ -31,6 +39,7 @@ int main()
             printf("\n\n    Frame number: %d\n", i);
             Parsing(fp);
     }
+    printf("Max Payload: %d\n", maxpayload);
     
     fclose(fp);
     printf("program done!!!\n");
@@ -40,17 +49,27 @@ int main()
 
 void Parsing(FILE* fp){
     int cur_position = ftell(fp);  // save the start point of the frame 
-    uint32_t caplen;  // length of the frame
+    uint32_t totalpacketlen;  // length of the total length including pkt header
     uint8_t datalink_type; // just in case...
     uint8_t network_type[2]; // protocol number for datalink layer (2 bytes)
     uint8_t transport_type = 0; // protocol number for network layer
     uint8_t app_type; // protocol number for 
     
-    parse_Pyshical(fp, &caplen, &datalink_type); //not just next layer type, also return length of frame
+    printf("###############################################\n");
+
+    parse_Pyshical(fp, &totalpacketlen, &datalink_type); //not just next layer type, also return length of frame
     parse_Datalink(fp, datalink_type, network_type);
     parse_Network(fp, network_type, &transport_type);
     parse_Transport(fp, transport_type, &app_type);
 
+    printf("\nCap Length: %d\n", caplength);
+    printf("Frame Size: %d\n", framesize);
+    printf("Packet Size: %d\n", packetsize);
+    printf("Segment Size: %d\n", segmentsize);
+
+    if(segmentsize > maxpayload)
+        maxpayload = segmentsize;
+
     fseek(fp, cur_position, SEEK_SET);
-    fseek(fp, caplen, 1);// after reading all the wanted data, change pointer to next packet
+    fseek(fp, totalpacketlen, 1);// after reading all the wanted data, change pointer to next packet
 }

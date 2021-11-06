@@ -2,6 +2,10 @@
 #include "network_layer.h"
 
 
+extern int framesize;  // layer 2 data, size without ethernet header (IP header + packet)
+extern int packetsize;  // layer 3 data, size without IP header (TCP header + segment)
+
+
 void parse_Network(FILE* fp, uint8_t network_type[], uint8_t* transport_type){
     uint16_t type = twobytearray(network_type);
     printf("Ethernet type: 0x%04x\n", type);
@@ -29,12 +33,14 @@ void parse_IPv4(FILE* fp, uint8_t* transport_type){
     IPv4_hdr chunk;
     fread(&chunk, sizeof(chunk), 1, fp);
     *transport_type = chunk.protocol;
+    packetsize = framesize - chunk.verhlen/4;   //hlen / 16 * 4
     print_IPv4(chunk);
 }
 
 void parse_IPv6(FILE* fp){
     IPv6_hdr chunk;
     fread(&chunk, sizeof(chunk), 1, fp);
+    packetsize = twobytearray(chunk.payloadlength) * 4;   //hlen / 16 * 4
 
     int8_t headernum= chunk.nextheader;
     switch((uint8_t)headernum){// do not use break since there maybe more than one extension header

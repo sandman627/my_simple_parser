@@ -2,6 +2,10 @@
 #include "transport_layer.h"
 
 
+extern int packetsize;  // layer 3 data, size without IP header (TCP header + segment)
+extern int segmentsize;  // layer 4 data, size without tcp or udp header (segment)
+
+
 void parse_Transport(FILE* fp, uint8_t protocolID, uint8_t* app_type){
 
     switch (protocolID)
@@ -26,6 +30,7 @@ void parse_Transport(FILE* fp, uint8_t protocolID, uint8_t* app_type){
 void parse_TCP(FILE* fp){
     tcp_hdr tcpheader;
     fread(&tcpheader, sizeof(tcpheader), 1, fp);
+    segmentsize = packetsize - tcpheader.HLENReseved/4;  // hlen /16 *4
     print_TCP(tcpheader);
 }
 
@@ -49,13 +54,22 @@ void print_TCP(tcp_hdr chunk){
     printf("Sequence Number: %d\n", fourbytearray(chunk.seqNum));
     printf("Acknowledge Number: %d\n", fourbytearray(chunk.ackNum));
 
-    printf("Header Length: %d\n", chunk.HLENReseved / 16);
+    printf("Header Length: %d bytes\n", chunk.HLENReseved / 4);
     printf("Reserved: %d\n", (chunk.HLENReseved % 16)<<4 + chunk.tcpFlags/64);
-    printf("Flags(URG, ACK, PSH, RST, SYN, FIN): %x\n", 0x3f & chunk.tcpFlags);
+
+    uint32_t flags = chunk.tcpFlags % 64;
+    printf("Flags URG: %s\n", 0b100000 & flags ? "true" : "false");
+    printf("Flags ACK: %s\n", 0b10000 & flags ? "true" : "false");
+    printf("Flags PSH: %s\n", 0b1000 & flags ? "true" : "false");
+    printf("Flags RST: %s\n", 0b100 & flags ? "true" : "false");
+    printf("Flags SYN: %s\n", 0b10 & flags ? "true" : "false");
+    printf("Flags FIN: %s\n", 0b1 & flags ? "true" : "false");
     printf("Window Size: %d\n", twobytearray(chunk.window));
 
     printf("Checksum: %04x\n", twobytearray(chunk.checksum));
     printf("Urgent: %04x\n", twobytearray(chunk.urgent));
+
+    printf("TCP Payload, Segment Size: %d\n", packetsize - chunk.HLENReseved / 16);
 }
 
 void print_UDP(udp_hdr chunk){
@@ -65,6 +79,8 @@ void print_UDP(udp_hdr chunk){
 
     printf("Length: %d\n", twobytearray(chunk.length));
     printf("Checksum: %04x\n", twobytearray(chunk.checksum));
+
+    printf("UDP Payload Size: %d\n", twobytearray(chunk.length) - 8);
 }
 
 void print_ICMP(icmp_hdr chunk){

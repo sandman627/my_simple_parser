@@ -11,6 +11,13 @@ typedef struct TCP_header // 20 + @ bytes
     // 5 optional
 }tcp_hdr;
 
+
+typedef struct TCP_Option__header
+{
+
+}tcpop__hdr;
+
+
 typedef struct UDP_header // 8 bytes
 {
     uint8_t srcPort[2], dstPort[2];

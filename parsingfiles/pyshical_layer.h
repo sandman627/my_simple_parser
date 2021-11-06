@@ -25,6 +25,6 @@ typedef struct packet_header // 16 bytes
 
 void parse_Wireshark(FILE* fp);
 
-void parse_Pyshical(FILE* fp, uint32_t* caplen, uint8_t* datalink_type);
-void parse_IEEE802(FILE* fp, uint32_t* caplen);
+void parse_Pyshical(FILE* fp, uint32_t* ptotalpacketlength, uint8_t* datalink_type);
+void parse_IEEE802(FILE* fp, uint32_t* ptotalpacketlength);
 void print_time(pkt_hdr pheader);

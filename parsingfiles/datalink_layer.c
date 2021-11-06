@@ -2,6 +2,10 @@
 #include "datalink_layer.h"
 
 
+extern int caplength;  // includes 16 bit pkt header but not file header (ethernet header + frame)
+extern int framesize;  // layer 2 data, size without ethernet header (IP header + packet)
+
+
 void parse_Datalink(FILE* fp, uint8_t datalink_type, uint8_t network_type[2]){
     ethrnt_hdr eheader;
     fread(&eheader, sizeof(eheader), 1, fp);
@@ -33,6 +37,7 @@ void parse_Datalink(FILE* fp, uint8_t datalink_type, uint8_t network_type[2]){
 void parse_ethernet(FILE* fp){
     ethrnt_hdr eheader;
     fread(&eheader, sizeof(eheader), 1, fp);
+    framesize = caplength - 14;
     print_ethernet(eheader);
 }
 
