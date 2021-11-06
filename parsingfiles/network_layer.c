@@ -33,7 +33,7 @@ void parse_IPv4(FILE* fp, uint8_t* transport_type){
     IPv4_hdr chunk;
     fread(&chunk, sizeof(chunk), 1, fp);
     *transport_type = chunk.protocol;
-    packetsize = framesize - chunk.verhlen/4;   //hlen / 16 * 4
+    packetsize = framesize - (chunk.verhlen % 16) * 4;   //hlen / 16 * 4
     print_IPv4(chunk);
 }
 

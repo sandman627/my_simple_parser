@@ -9,6 +9,7 @@ extern int framesize;  // layer 2 data, size without ethernet header (IP header 
 void parse_Datalink(FILE* fp, uint8_t datalink_type, uint8_t network_type[2]){
     ethrnt_hdr eheader;
     fread(&eheader, sizeof(eheader), 1, fp);
+    framesize = caplength - 14;
     print_ethernet(eheader);
 
     network_type[0] = eheader.type[0];

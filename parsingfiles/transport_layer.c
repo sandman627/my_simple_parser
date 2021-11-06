@@ -30,13 +30,14 @@ void parse_Transport(FILE* fp, uint8_t protocolID, uint8_t* app_type){
 void parse_TCP(FILE* fp){
     tcp_hdr tcpheader;
     fread(&tcpheader, sizeof(tcpheader), 1, fp);
-    segmentsize = packetsize - tcpheader.HLENReseved/4;  // hlen /16 *4
+    segmentsize = packetsize - (tcpheader.HLENReseved / 16) *4;  // hlen /16 *4
     print_TCP(tcpheader);
 }
 
 void parse_UDP(FILE* fp){
     udp_hdr udpheader;
     fread(&udpheader, sizeof(udpheader), 1, fp);
+    segmentsize = packetsize - 8;  // hlen /16 *4
     print_UDP(udpheader);
 }
 
