@@ -1,5 +1,4 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include <string.h>
 #include <time.h>
 #include "parsingfiles/pyshical_layer.h"
 #include "parsingfiles/datalink_layer.h"
@@ -14,9 +13,13 @@ int packetsize = 0;  // layer 3 data, size without IP header (TCP header + segme
 int segmentsize = 0;  // layer 4 data, size without tcp or udp header (segment)
 int maxpayload = 0;
 
+
+uint8_t sourceIP[4], destinationIP[4];
+uint8_t sourcePort[2], destinationPort[2];
+uint8_t TransProtocol;
+
+
 void Parsing(FILE* fp);
-
-
 
 int main()
 {
@@ -69,6 +72,8 @@ void Parsing(FILE* fp){
 
     if(segmentsize > maxpayload)
         maxpayload = segmentsize;
+
+    caplength, framesize, packetsize, segmentsize = 0;
 
     fseek(fp, cur_position, SEEK_SET);
     fseek(fp, totalpacketlen, 1);// after reading all the wanted data, change pointer to next packet
