@@ -31,6 +31,8 @@ void parse_TCP(FILE* fp){
     tcp_hdr tcpheader;
     fread(&tcpheader, sizeof(tcpheader), 1, fp);
     segmentsize = packetsize - (tcpheader.HLENReseved / 16) *4;  // hlen /16 *4
+    CheckSumFunction(fp, segmentsize, tcpheader.checksum);
+    //fseek(fp, tcpheader.HLENReseved / 4 -20, 1);
     print_TCP(tcpheader);
 }
 
@@ -51,9 +53,9 @@ void parse_ICMP(FILE* fp){  // ICMP is in fact a network protocol, but for conve
 void print_TCP(tcp_hdr chunk){
     printf("\nTCP HEADER\n");
     printf("Source Port: %d\n", twobytearray(chunk.srcPort));
-    printf("Destination Port: %d\n", twobytearray(chunk.dstPort));
-    printf("Sequence Number: %d\n", fourbytearray(chunk.seqNum));
-    printf("Acknowledge Number: %d\n", fourbytearray(chunk.ackNum));
+    printf("Destination Port: %u\n", twobytearray(chunk.dstPort));
+    printf("Sequence Number: %u\n", reversefourbytearray(chunk.seqNum));
+    printf("Acknowledge Number: %u\n", reversefourbytearray(chunk.ackNum));
 
     printf("Header Length: %d bytes\n", chunk.HLENReseved / 4);
     printf("Reserved: %d\n", (chunk.HLENReseved % 16)<<4 + chunk.tcpFlags/64);
@@ -71,6 +73,14 @@ void print_TCP(tcp_hdr chunk){
     printf("Urgent: %04x\n", twobytearray(chunk.urgent));
 
     printf("TCP Payload, Segment Size: %d\n", packetsize - chunk.HLENReseved / 16);
+
+
+    if((0b10000 & flags) && (0b10 & flags)){  // both syn and ack flags are true
+        printf("\nInitial Starting Sequence number: %u\n", reversefourbytearray(chunk.ackNum) - 1);
+    }
+    if(0b1 & flags){  // fin flag is true
+        printf("Ending Sequence number: %u\n", reversefourbytearray(chunk.seqNum));
+    }
 }
 
 void print_UDP(udp_hdr chunk){

@@ -31,7 +31,8 @@ typedef struct Connection_Node // list for connections
 
 void bytehexprint(FILE* fp, int bytenum);
 uint32_t fourbytearray(uint8_t array[4]);
+uint32_t reversefourbytearray(uint8_t array[4]);
 uint16_t twobytearray(uint8_t array[2]);
-
+int CheckSumFunction(FILE* fp, int bytenum, uint8_t checksum[2]);
 
 #endif

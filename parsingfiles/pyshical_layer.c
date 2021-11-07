@@ -22,8 +22,8 @@ void parse_IEEE802(FILE* fp, uint32_t* ptotalpacketlength){
     caplength = fourbytearray(pheader.caplen);
     *ptotalpacketlength = fourbytearray(pheader.caplen) + sizeof(pkt_hdr);
 
-    printf("Caplen: %d\n", fourbytearray(pheader.caplen));
-    printf("Length: %d\n", fourbytearray(pheader.len));
+    printf("Caplen: %u\n", fourbytearray(pheader.caplen));
+    printf("Length: %u\n", fourbytearray(pheader.len));
     print_time(pheader);
 }
 
@@ -33,8 +33,5 @@ void print_time(pkt_hdr pheader){
 
     time_t t_sec = sec;
     printf("Time: %s",ctime(&t_sec));
-
-    /*
-    Code for usec
-    */
+    printf("usec: %u\n", usec);
 }

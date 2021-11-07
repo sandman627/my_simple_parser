@@ -30,10 +30,38 @@ uint32_t fourbytearray(uint8_t array[4]){
     return result;
 }
 
+uint32_t reversefourbytearray(uint8_t array[4]){
+    uint32_t result = 0;
+    for(int i = 0; i < 4; i++){
+        result <<= 8;
+        result += array[i];
+    }
+    return result;
+}
+
 uint16_t twobytearray(uint8_t array[2]){
     uint16_t result = array[0];
     result <<= 8;
     result += array[1];
+    return result;
+}
+
+
+int CheckSumFunction(FILE* fp, int bytenum, uint8_t checksum[2]){  // returns checksum value
+    uint16_t temp;
+    uint16_t result = twobytearray(checksum);
+    for(int i = 0; i < bytenum; i++){
+        fread(&temp, sizeof(temp), 1, fp);
+        result += temp;
+    }
+    fseek(fp, -bytenum, 1);
+
+    if(result == 0xffff){
+        printf("Checksum : No Error\n");
+    }else{
+        printf("Checksum : Error Found!!!\n");
+    }
+
     return result;
 }
 

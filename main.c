@@ -42,7 +42,7 @@ int main()
             printf("\n\n    Frame number: %d\n", i);
             Parsing(fp);
     }
-    printf("Max Payload: %d\n", maxpayload);
+    printf("\nMax Payload: %d\n", maxpayload);
     
     fclose(fp);
     printf("program done!!!\n");

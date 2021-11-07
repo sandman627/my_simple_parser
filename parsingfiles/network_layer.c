@@ -34,6 +34,7 @@ void parse_IPv4(FILE* fp, uint8_t* transport_type){
     fread(&chunk, sizeof(chunk), 1, fp);
     *transport_type = chunk.protocol;
     packetsize = framesize - (chunk.verhlen % 16) * 4;   //hlen / 16 * 4
+    fseek(fp, (chunk.verhlen % 16) * 4 -20, 1);
     print_IPv4(chunk);
 }
 
